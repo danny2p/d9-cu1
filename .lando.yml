@@ -1,0 +1,25 @@
+name: d9-cu-ms
+recipe: drupal9
+config:
+  webroot: web
+proxy:
+  appserver:
+    - d9-cu-1.lndo.site
+    - d9-cu-2.lndo.site
+    - d9-cu-3.lndo.site
+    - umami-ap-test.lndo.site
+services:
+  appserver:
+    webroot: web
+  d9-cu-1:
+    type: mysql:5.7
+    portforward: TRUE
+  d9-cu-2:
+    type: mysql:5.7
+    portforward: TRUE
+  d9-cu-3:
+    type: mysql:5.7
+    portforward: TRUE
+  umami-ap-test:
+    type: mysql:5.7
+    portforward: TRUE
