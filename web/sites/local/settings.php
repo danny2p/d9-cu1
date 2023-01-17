@@ -19,7 +19,7 @@ $settings['container_yamls'][] = __DIR__ . '/services.yml';
  *      a local development environment, to ensure that
  *      the site settings remain consistent.
  */
-include __DIR__ . "../default/settings.pantheon.php";
+include "/app/web/sites/default/settings.pantheon.php";
 
 /**
  * Skipping permissions hardening will make scaffolding
@@ -52,3 +52,5 @@ if (!empty($lando_info)) {
 // Define this site's own config sync directory for local environment.
   $settings['config_sync_directory'] = '/app/config/'.$site_name; 
 }
+
+$settings['hash_salt'] = 'wzuUwbK7eKmLG335iAOUT6cvDJ23Gzd1w_DjPpk-aF76xCBi7mK8GLQ2oaLDX3XxTcXL6IPwrw';

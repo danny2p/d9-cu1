@@ -11,7 +11,7 @@ else
 fi
 
 DB_BAK_PATH="db_backups"
-mkdir -p DB_BAK_PATH
+mkdir -p $DB_BAK_PATH
 UPSTREAM="95dd5ea4-a2a8-4608-946a-38bd3a5eb19e"
 ORG="90644669-f536-4de0-8eba-2085302afa76"
 echo "Performing sync type: $OPERATION"
@@ -19,8 +19,8 @@ echo "Performing sync type: $OPERATION"
 for SITE in $(terminus org:site:list --upstream=$UPSTREAM --field=name -- $ORG); 
 do 
   echo "$SITE"; 
-  DEFAULT_PATH="web/sites/local"
-  SITE_PATH="web/sites/$SITE.lndo.site"
+  DEFAULT_PATH="web/sites/local/"
+  SITE_PATH="web/sites/$SITE.lndo.site/"
   SITE_SETTINGS="$SITE_PATH/settings.php"
 
   #check if Drupal settings file exists
@@ -34,6 +34,20 @@ do
     #insert machine name for this site into settings file
     sed -i "" "s/{uninitialized}/$SITE/" $SITE_SETTINGS
     #optionally could also pull files here
+  fi
+
+  #check if sites.php exists (for multisite), create if not
+  if [ ! -f "web/sites/sites.php" ]
+  then
+    echo "<?php" > web/sites/sites.php
+  fi
+
+  #check for each site in sites.php
+  if ! grep -q "$SITE\.lndo\.site" web/sites/sites.php
+  then
+    #insert site
+    sed -i "" "s/<?php/<?php\\n \$sites['$SITE\.lndo\.site'] = '$SITE\.lndo\.site';/" web/sites/sites.php
+    echo "adding $SITE to sites.php"
   fi
 
   #check for hostname of each site in lando file
@@ -55,11 +69,12 @@ do
   fi
 
   #if we're creating site for the first time, or specifying "db" grab a DB backup
-  if [[ $OPERATION != onlysettings ]]
+  if [ $OPERATION == db ]
   then
     echo "Importing dev datbase backup"
     terminus backup:get $SITE.dev --element=db --to=$DB_BAK_PATH/$SITE.sql
     lando db-import $DB_BAK_PATH/$SITE.sql --host $SITE
     rm $DB_BAK_PATH/$SITE.sql
   fi
+
 done
