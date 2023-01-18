@@ -1,9 +1,11 @@
 #!/bin/bash
-#this script takes one argument.  valid values are init, db, onlysettings
-#init will create all settings files and fetch database imports for all sites
+#this script takes one argument.  valid values are init, content, db, files, onlysettings
+#init will create all settings files and setup local config, but won't fetch content
+#lando will have to be started after this to pick up settings from init step
+#content pulls DB + Files
 #db will only pull in databases, perhaps add a flag here for individual site pull
-#onlysettings will not pull databases, but will ensure local settings
-#are set for each site
+#files pulls files
+
 if [[ $# -eq 0 ]] ; then
   OPERATION="init"
 else
@@ -25,8 +27,8 @@ do
   SITE_SETTINGS="$SITE_PATH/settings.php"
   FILES_PATH="$SITE_PATH/files/"
 
-  #only populate settings if run without params, or with onlysettings
-  if  [ $OPERATION == init ] || [ $OPERATION == onlysettings ] 
+  #populate settings if run without params (init)
+  if  [ $OPERATION == init ]
   then
     #check if Drupal settings file exists
     #if not, initialize site settings file
@@ -75,7 +77,7 @@ do
   fi
 
   #if we're creating site for the first time, or specifying "db" grab a DB backup
-  if [ $OPERATION == db ]
+  if [ $OPERATION == db ] || [ $OPERATION == content ]
   then
     echo "Importing dev datbase backup"
     terminus backup:get $SITE.dev --element=db --to=$BAK_PATH/$SITE.sql
@@ -83,7 +85,7 @@ do
     rm $BAK_PATH/$SITE.sql
   fi
   #Grab Files
-  if [ $OPERATION == files ]
+  if [ $OPERATION == files ] || [ $OPERATION == content ]
   then
     echo "Importing dev files"
     mkdir -p $FILES_PATH
