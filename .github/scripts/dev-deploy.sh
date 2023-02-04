@@ -21,7 +21,7 @@ terminus site:upstream:clear-cache $1 -q
 
 # terminus connection:set "${1}.dev" git
 # STATUS=$(terminus upstream:update:status "${1}.dev")
-terminus upstream:updates:apply $DEV --updatedb -q
+terminus upstream:updates:apply $DEV --updatedb --accept-upstream -q
 SLACK="Finished ${SITE} DEV Deployment"
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 
