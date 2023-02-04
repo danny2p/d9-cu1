@@ -13,4 +13,4 @@ jobs:
         pantheon-machine-token: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
     - name: Parallel Processing
       run: |
-        terminus org:site:list ${ORG_UUID} --format list --upstream ${UPSTREAM_UUID} --field name | sort -V | parallel --jobs 100 .github/scripts/shell/test-deploy.sh {}
+        terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name | sort -V | parallel --jobs 100 .github/scripts/test-deploy.sh {}
