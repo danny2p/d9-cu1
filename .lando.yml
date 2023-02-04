@@ -6,4 +6,3 @@ config:
 proxy:
   appserver_nginx:
 services:
-
