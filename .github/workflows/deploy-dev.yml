@@ -9,6 +9,8 @@ jobs:
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
     steps:
+      - uses: actions/checkout@v2
+    steps:
     # Install Terminus.
     - name: Install Terminus
       uses: pantheon-systems/terminus-github-actions@main
