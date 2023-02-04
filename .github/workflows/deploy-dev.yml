@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
     steps:
     # Install Terminus.
     - name: Install Terminus
@@ -16,3 +18,7 @@ jobs:
       run: |
         terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name
         terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name | sort -V | parallel --jobs 100 .github/scripts/shell/dev-deploy.sh {}
+      env:
+        ORG_UUID: ${{ secrets.ORG_UUID }}
+        UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
