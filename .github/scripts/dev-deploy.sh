@@ -27,7 +27,7 @@ curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $S
 
 # Run drush config import, clear cache
 # terminus drush "${1}.dev" -- cim -y
-terminus env:clear-cache "${1}.dev"
+terminus env:clear-cache $DEV
 
 # Report time to results.
 DURATION=$(( SECONDS - START ))
