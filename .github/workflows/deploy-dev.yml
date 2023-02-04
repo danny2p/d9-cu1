@@ -1,4 +1,4 @@
-name: Parallel Shell - Terminus Deployment
+name: Deploy to Dev
 on:
   push:
     branches:
@@ -14,4 +14,5 @@ jobs:
         pantheon-machine-token: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
     - name: Parallel Processing
       run: |
+        terminus org:site:list ${ORG_UUID} --format list --upstream ${UPSTREAM_UUID} --field name
         terminus org:site:list ${ORG_UUID} --format list --upstream ${UPSTREAM_UUID} --field name | sort -V | parallel --jobs 100 .github/scripts/shell/dev-deploy.sh {}

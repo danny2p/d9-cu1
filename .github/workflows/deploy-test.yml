@@ -1,4 +1,4 @@
-name: Parallel Shell - Terminus Deployment
+name: Deploy to Test
 on: [workflow_dispatch]
 jobs:
   build:

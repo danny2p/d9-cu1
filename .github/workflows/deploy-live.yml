@@ -1,4 +1,4 @@
-name: Parallel Shell - Terminus Deployment
+name: Deploy to Live
 on: [workflow_dispatch]
 jobs:
   build:
@@ -14,4 +14,3 @@ jobs:
     - name: Parallel Processing
       run: |
         terminus org:site:list ${ORG_UUID} --format list --upstream ${UPSTREAM_UUID} --field name | sort -V | parallel --jobs 100 .github/scripts/shell/live-deploy.sh {}
-        
