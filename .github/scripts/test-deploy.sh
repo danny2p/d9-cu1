@@ -17,7 +17,7 @@ echo -e "Starting ${SITE} Test Deployment";
 
 # Deploy code to test and live
 terminus env:deploy $TEST --cc --updatedb -n -q
-SLACK="Finished ${SITE} TEST Deployment"
+SLACK="${SITE} TEST Code Deployment Finished. Importing config and clearing cache."
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 
 

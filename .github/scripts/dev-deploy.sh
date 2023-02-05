@@ -22,7 +22,7 @@ terminus site:upstream:clear-cache $1 -q
 # terminus connection:set "${1}.dev" git
 # STATUS=$(terminus upstream:update:status "${1}.dev")
 terminus upstream:updates:apply $DEV --updatedb --accept-upstream -q
-SLACK="Finished ${SITE} DEV Deployment"
+SLACK="${SITE} DEV Code Deployment Finished. Importing config and clearing cache."
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 
 # Run drush config import, clear cache
@@ -34,6 +34,6 @@ DURATION=$(( SECONDS - START ))
 TIME_DIFF=$(bc <<< "scale=2; $DURATION / 60")
 MIN=$(printf "%.2f" $TIME_DIFF)
 SITE_LINK="https://dev-${SITE}.pantheonsite.io";
-SLACK=":white_check_mark: Finished ${SITE} deployment in ${MIN} minutes. \n ${SITE_LINK}"
+SLACK=":white_check_mark: Finished ${SITE} full deployment in ${MIN} minutes. \n ${SITE_LINK}"
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 
