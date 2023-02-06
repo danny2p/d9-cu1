@@ -22,6 +22,14 @@ terminus site:upstream:clear-cache $1 -q
 # terminus connection:set "${1}.dev" git
 # STATUS=$(terminus upstream:update:status "${1}.dev")
 terminus upstream:updates:apply $DEV --updatedb --accept-upstream -q
+
+# if you want to push these updates to any multidev branch-based 
+# environments on a Pantheon site (ie: permanent pre-prod environment)
+# you can specify as below
+
+# terminus upstream:updates:apply --updatedb --accept-upstream -- <site>.<env>
+
+
 SLACK="${SITE} DEV Code Deployment Finished. Importing config and clearing cache."
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 
