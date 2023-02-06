@@ -8,7 +8,6 @@
 set -e
 
 SITE=$1
-DEV=$(echo "${SITE}.dev")
 START=$SECONDS
 
 # Tell slack we're starting this site
@@ -17,10 +16,10 @@ curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}
 echo -e "Starting ${SITE} Live Deployment";
 
 # Backup DB only for live prior to deploy, 30 day retention
-terminus backup:create --element database --keep-for 30 -- $LIVE
-SLACK="Finished ${SITE} Live Backup"
+terminus backup:create --element database --keep-for 30 -- $SITE.live
+SLACK="Finished ${SITE} Live Backup. Deploying code."
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
-terminus env:deploy $LIVE --cc -n -q
+terminus env:deploy $SITE.live --cc -n -q
 
 # Report time to results.
 DURATION=$(( SECONDS - START ))

@@ -3,14 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       pantheon_tag:
-        description: 'Pantheon Tags to deploy to (Defaults to all if empty)'
+        description: 'Pantheon Tags to deploy to (Defaults to all)'
         required: true
         default: 'all'
 env:
   INPUT_PANTHEON_TAG: ${{ github.event.inputs.pantheon_tag }}
 jobs:
   build:
-    name: Deploy all to TEST
+    name: Deploy sites to TEST
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1

@@ -7,7 +7,6 @@
 set -e
 
 SITE=$1
-DEV=$(echo "${SITE}.dev")
 START=$SECONDS
 
 # Tell slack we're starting this site
@@ -15,8 +14,8 @@ SLACK_START="Started ${SITE} Test deployment"
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}'}" $SLACK_WEBHOOK
 echo -e "Starting ${SITE} Test Deployment";
 
-# Deploy code to test and live
-terminus env:deploy $TEST --cc --updatedb -n -q
+# Deploy code to test 
+terminus env:deploy $SITE.test --cc --updatedb -n -q
 SLACK="${SITE} TEST Code Deployment Finished. Importing config and clearing cache."
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 
