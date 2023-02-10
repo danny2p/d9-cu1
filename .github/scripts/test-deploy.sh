@@ -19,6 +19,7 @@ terminus env:deploy $SITE.test --cc --updatedb -n -q
 SLACK="${SITE} TEST Code Deployment Finished. Importing config and clearing cache."
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 
+#import config, clear cache if needed
 
 # Report time to results.
 DURATION=$(( SECONDS - START ))

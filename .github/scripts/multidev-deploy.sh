@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Usage
-# ./dev-deploy.sh <site-name or uuid>
+# ./dev-deploy.sh <site-name or uuid> 
+# called from deploy-dev.yml workflow
 
 # Exit on error
 set -e
