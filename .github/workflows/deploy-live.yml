@@ -20,6 +20,10 @@ jobs:
       with:
         pantheon-machine-token: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
     - name: Execute Parallel Deployment
+      env:
+        ORG_UUID: ${{ secrets.ORG_UUID }}
+        UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       run: |
         if  [ $INPUT_PANTHEON_TAG == all ]
         then
@@ -29,7 +33,3 @@ jobs:
           echo "Deploying sites with tag: $INPUT_PANTHEON_TAG."
           terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID  --tag $INPUT_PANTHEON_TAG --field name | sort -V | parallel --jobs 100 .github/scripts/live-deploy.sh {}
         fi
-      env:
-        ORG_UUID: ${{ secrets.ORG_UUID }}
-        UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
