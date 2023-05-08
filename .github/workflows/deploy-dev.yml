@@ -31,7 +31,6 @@ jobs:
         terminus -n auth:login --machine-token=$TERMINUS_MACHINE_TOKEN
         git config --global user.email "gha@github"
         git config --global user.name "Github Action"
-        git checkout $CI_BRANCH 
         git fetch --unshallow origin
         if [ $GITHUB_REF_NAME = "master" ]
         then
