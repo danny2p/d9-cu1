@@ -13,12 +13,12 @@ START=$SECONDS
 
 # Tell slack we're starting this site
 SLACK_START="Started ${SITE} deployment"
-curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}'}" $SLACK_WEBHOOK
+#curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}'}" $SLACK_WEBHOOK
 echo -e "Starting ${SITE}";
 
 # Tell slack we're creating multidev
 SLACK_START="Creating Multidev ${CI_BRANCH} for ${SITE}"
-curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}'}" $SLACK_WEBHOOK
+#curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}'}" $SLACK_WEBHOOK
 echo -e "Creating Multidev ${CI_BRANCH} for ${SITE}";
 
 # Create a new multidev environment (or push to an existing one)
@@ -28,7 +28,7 @@ terminus -n build:env:create $SITE.dev $CI_BRANCH --yes
 terminus site:upstream:clear-cache $SITE -q
 
 SLACK="Finished ${SITE} ${ENV} Deployment"
-curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
+#curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 
 # Run drush config import, clear cache
 # terminus drush "${1}.dev" -- cim -y
@@ -40,4 +40,4 @@ TIME_DIFF=$(bc <<< "scale=2; $DURATION / 60")
 MIN=$(printf "%.2f" $TIME_DIFF)
 SITE_LINK="https://${CI_BRANCH}-${SITE}.pantheonsite.io";
 SLACK=":white_check_mark: Finished ${SITE} deployment in ${MIN} minutes. \n ${SITE_LINK}"
-curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
+#curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
