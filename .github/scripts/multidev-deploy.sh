@@ -27,9 +27,6 @@ terminus -n build:env:create $SITE.dev $CI_BRANCH --yes
 # Check site upstream for updates, apply
 terminus site:upstream:clear-cache $SITE -q
 
-# terminus connection:set "${1}.dev" git
-# STATUS=$(terminus upstream:update:status "${1}.dev")
-terminus upstream:updates:apply $SITE.$ENV --updatedb -q
 SLACK="Finished ${SITE} ${ENV} Deployment"
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK
 

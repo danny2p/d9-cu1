@@ -23,6 +23,8 @@ jobs:
         TERMINUS_MACHINE_TOKEN: '${{ secrets.TERMINUS_MACHINE_TOKEN }}'
       run: |
         terminus -n auth:login --machine-token=$TERMINUS_MACHINE_TOKEN
+        git config --global user.email "gha@github"
+        git config --global user.name "Github Action"
         if [ $GITHUB_REF_NAME = "master" ]
         then
           # Push to the dev environment
