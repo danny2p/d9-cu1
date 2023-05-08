@@ -7,9 +7,6 @@
 # Exit on error
 set -e
 
-#since we're executing this in parallel, build tools will throw a "remote pantheon already defined" if we don't rm it first
-git remote rm pantheon
-
 SITE=$1
 SITE_ENV=$(echo "${SITE}.${CI_BRANCH}")
 START=$SECONDS
@@ -26,6 +23,9 @@ echo -e "Creating Multidev ${CI_BRANCH} for ${SITE}";
 
 # Create a new multidev environment (or push to an existing one)
 terminus -n build:env:create $SITE.dev $CI_BRANCH --yes
+
+#since we're executing this in parallel, build tools will throw a "remote pantheon already defined" if we don't rm it first
+git remote rm pantheon
 
 # Check site upstream for updates, apply
 terminus site:upstream:clear-cache $SITE -q
