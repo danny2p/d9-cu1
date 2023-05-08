@@ -20,6 +20,17 @@ jobs:
         ORG_UUID: ${{ secrets.ORG_UUID }}
         UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        CI_BRANCH: $GITHUB_REF_NAME
       run: |
-        terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name
-        terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name | sort -V | parallel --jobs 100 .github/scripts/dev-deploy.sh {}
+        if [ $GITHUB_REF_NAME = "master" ]
+        then
+          # Push to the dev environment
+          echo "Pushing to Dev"
+          terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name
+          terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name | sort -V | parallel --jobs 100 .github/scripts/dev-deploy.sh {}
+        else
+          # Create a new multidev environment (or push to an existing one)
+          echo "Creating and pushing to Multidev"
+          terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name
+          terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name | sort -V | parallel --jobs 100 .github/scripts/multidev-deploy.sh {}
+        fi

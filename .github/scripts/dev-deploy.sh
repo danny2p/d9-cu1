@@ -2,6 +2,7 @@
 
 # Usage
 # ./dev-deploy.sh <site-name or uuid>
+# called from deploy-dev.yml workflow
 
 # Exit on error
 set -e
@@ -9,6 +10,9 @@ set -e
 SITE=$1
 DEV=$(echo "${SITE}.dev")
 START=$SECONDS
+
+#make sure environment is awake
+terminus env:wake $DEV
 
 # Tell slack we're starting this site
 SLACK_START="Started ${SITE} deployment"
@@ -18,9 +22,6 @@ echo -e "Starting ${SITE}";
 
 # Check site upstream for updates, apply
 terminus site:upstream:clear-cache $1 -q
-
-# terminus connection:set "${1}.dev" git
-# STATUS=$(terminus upstream:update:status "${1}.dev")
 terminus upstream:updates:apply $DEV --updatedb --accept-upstream -q
 
 # if you want to push these updates to any multidev branch-based 

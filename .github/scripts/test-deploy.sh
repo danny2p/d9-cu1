@@ -2,12 +2,16 @@
 
 # Usage
 # ./live-deploy.sh <site-name or uuid>
+# called from deploy-test.yml workflow
 
 # Exit on error
 set -e
 
 SITE=$1
 START=$SECONDS
+
+#make sure environment is awake
+terminus env:wake test
 
 # Tell slack we're starting this site
 SLACK_START="Started ${SITE} Test deployment"
