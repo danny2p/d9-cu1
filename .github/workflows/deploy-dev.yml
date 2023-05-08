@@ -6,6 +6,9 @@ on:
       - '**'
 jobs:
   build:
+    container:
+      image: quay.io/pantheon-public/build-tools-ci:6.x
+      options: --user root
     runs-on: ubuntu-latest
     env:
       GITHUB_CONTEXT: ${{ toJson(github) }}
