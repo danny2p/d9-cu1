@@ -21,7 +21,7 @@ jobs:
         ORG_UUID: ${{ secrets.ORG_UUID }}
         UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        CI_BRANCH: GITHUB_REF_NAME
+        CI_BRANCH: ${{ github.ref_name }}
       run: |
         if [ $GITHUB_REF_NAME = "master" ]
         then
