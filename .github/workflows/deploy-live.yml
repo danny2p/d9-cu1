@@ -20,6 +20,7 @@ jobs:
       with:
         pantheon-machine-token: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
     - name: Execute Parallel Deployment
+      continue-on-error: true
       env:
         ORG_UUID: ${{ secrets.ORG_UUID }}
         UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
