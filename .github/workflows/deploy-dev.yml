@@ -32,7 +32,7 @@ jobs:
         git config --global user.email "gha@github"
         git config --global user.name "Github Action"
         git checkout $CI_BRANCH 
-        git fetch --all
+        git fetch --unshallow origin
         if [ $GITHUB_REF_NAME = "master" ]
         then
           # Push to the dev environment
