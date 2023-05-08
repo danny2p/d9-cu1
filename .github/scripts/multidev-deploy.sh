@@ -22,7 +22,7 @@ curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}
 echo -e "Creating Multidev ${CI_BRANCH} for ${SITE}";
 
 # Create a new multidev environment (or push to an existing one)
-terminus -n build:env:create $SITE $CI_BRANCH --yes
+terminus -n build:env:create $SITE.dev $CI_BRANCH --yes
 
 # Check site upstream for updates, apply
 terminus site:upstream:clear-cache $SITE -q
