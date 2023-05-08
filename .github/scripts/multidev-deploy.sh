@@ -22,7 +22,7 @@ SLACK_START="Creating Multidev ${CI_BRANCH} for ${SITE}"
 echo -e "Creating Multidev ${CI_BRANCH} for ${SITE}";
 
 # Sync branch
-git pull $PANTHEON_REPOSITORY $CI_BRANCH
+git pull $PANTHEON_REPOSITORY $CI_BRANCH --no-rebase
 git push -u $PANTHEON_REPOSITORY HEAD:refs/heads/$CI_BRANCH
 
 # Create a new multidev environment if it doesn't exist already
