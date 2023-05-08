@@ -14,18 +14,15 @@ jobs:
       GITHUB_CONTEXT: ${{ toJson(github) }}
     steps:
     - uses: actions/checkout@v2
-    # Install Terminus.
-    - name: Install Terminus
-      uses: pantheon-systems/terminus-github-actions@main
-      with:
-        pantheon-machine-token: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
     - name: Parallel Processing
       env:
         ORG_UUID: ${{ secrets.ORG_UUID }}
         UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         CI_BRANCH: ${{ github.ref_name }}
+        PANTHEON_MACHINE_TOKEN: '${{ secrets.PANTHEON_MACHINE_TOKEN }}'
       run: |
+        terminus -n auth:login --machine-token=$PANTHEON_MACHINE_TOKEN
         if [ $GITHUB_REF_NAME = "master" ]
         then
           # Push to the dev environment
