@@ -11,9 +11,6 @@ SITE=$1
 SITE_ENV=$(echo "${SITE}.${CI_BRANCH}")
 START=$SECONDS
 
-#make sure environment is awake
-terminus env:wake $SITE_ENV
-
 # Tell slack we're starting this site
 SLACK_START="Started ${SITE} deployment"
 curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}'}" $SLACK_WEBHOOK
