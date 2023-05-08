@@ -21,16 +21,11 @@ SLACK_START="Creating Multidev ${CI_BRANCH} for ${SITE}"
 #curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK_START}'}" $SLACK_WEBHOOK
 echo -e "Creating Multidev ${CI_BRANCH} for ${SITE}";
 
-# Create a new multidev environment (or push to an existing one)
-terminus -n build:env:create $SITE.dev $CI_BRANCH --yes
-#since we're executing this in parallel, build tools will throw a "remote pantheon already defined" if we don't rm it first
-git remote rm pantheon
+# Sync branch
+git push -u $PANTHEON_REPOSITORY HEAD:refs/heads/$CI_BRANCH
 
-#since we're executing this in parallel, build tools will throw a "remote pantheon already defined" if we don't rm it first
-git remote rm pantheon
-
-# Check site upstream for updates, apply
-terminus site:upstream:clear-cache $SITE -q
+# Create a new multidev environment if it doesn't exist already
+terminus multidev:create -- $SITE.dev $CI_BRANCH
 
 SLACK="Finished ${SITE} ${ENV} Deployment"
 #curl -X POST -H 'Content-type: application/json' --data "{'text':'${SLACK}'}" $SLACK_WEBHOOK

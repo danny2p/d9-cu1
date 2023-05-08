@@ -26,7 +26,8 @@ jobs:
         UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         CI_BRANCH: ${{ github.ref_name }}
-        TERMINUS_MACHINE_TOKEN: '${{ secrets.TERMINUS_MACHINE_TOKEN }}'
+        TERMINUS_MACHINE_TOKEN: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
+        PANTHEON_REPOSITORY: ${{ secrets.PANTHEON_REPOSITORY }}
       run: |
         terminus -n auth:login --machine-token=$TERMINUS_MACHINE_TOKEN
         git config --global user.email "gha@github"
