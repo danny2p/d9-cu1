@@ -20,9 +20,9 @@ jobs:
         UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         CI_BRANCH: ${{ github.ref_name }}
-        PANTHEON_MACHINE_TOKEN: '${{ secrets.PANTHEON_MACHINE_TOKEN }}'
+        TERMINUS_MACHINE_TOKEN: '${{ secrets.TERMINUS_MACHINE_TOKEN }}'
       run: |
-        terminus -n auth:login --machine-token=$PANTHEON_MACHINE_TOKEN
+        terminus -n auth:login --machine-token=$TERMINUS_MACHINE_TOKEN
         if [ $GITHUB_REF_NAME = "master" ]
         then
           # Push to the dev environment
