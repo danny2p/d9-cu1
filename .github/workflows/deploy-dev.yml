@@ -14,6 +14,12 @@ jobs:
       GITHUB_CONTEXT: ${{ toJson(github) }}
     steps:
     - uses: actions/checkout@v2
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.PANTHEON_SSH_KEY }}
+        config: ${{ secrets.SSH_CONFIG }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
     - name: Parallel Processing
       env:
         ORG_UUID: ${{ secrets.ORG_UUID }}
