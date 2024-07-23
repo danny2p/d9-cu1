@@ -65,15 +65,15 @@ jobs:
       env:
         CI_BRANCH: ${{ github.ref_name }}
     - name: Create multidev if needed
+      id: branch-processor
       run: |
         if ! terminus env:info $CANARY_SITE.$CI_BRANCH > /dev/null 2>&1; then
             terminus env:create $CANARY_SITE.dev $CI_BRANCH
         else
             echo "Environment $CI_BRANCH already exists."
         fi
-        MULTIDEV_URL=$(echo "https://$PR_BRANCH_NAME-$CANARY_SITE.pantheonsite.io")
-        echo "MULTIDEV_URL=$MULTIDEV_URL" >> "$GITHUB_ENV"
-
+        MULTIDEV_URL=$(echo "https://$CI_BRANCH-$CANARY_SITE.pantheonsite.io")
+        echo "MULTIDEV_URL=${MULTIDEV_URL}" >> $GITHUB_OUTPUT
         echo "\n multidev: $MULTIDEV_URL"
       env:
         CI_BRANCH: ${{ github.ref_name }}
@@ -81,5 +81,5 @@ jobs:
       uses: peter-evans/commit-comment@v1
       with:
         body: |
-          Pantheon Multidev updated - $MULTIDEV_URL - ${MULTIDEV_URL}
+          Pantheon Multidev updated - ${{ steps.branch-processor.outputs.MULTIDEV_URL }}
         
