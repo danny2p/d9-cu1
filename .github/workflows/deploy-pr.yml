@@ -1,4 +1,4 @@
-name: Deploy Branch to Pantheon Canary Multidev
+name: Deploy PR to Pantheon Canary Multidev
 on:
   pull_request:
     types: [opened, synchronize, reopened]
