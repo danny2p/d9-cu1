@@ -41,6 +41,7 @@ jobs:
       env:
         ORG_UUID: ${{ secrets.ORG_UUID }}
         UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
+        CI_BRANCH: ${{ github.ref_name }}
     - name: Sync code to site
       run: |
         # Setup remote branch connection
@@ -57,10 +58,11 @@ jobs:
         git fetch --unshallow pantheon
         #git checkout -b $PR_BRANCH_NAME
         #git add .
-        
+
         # Sync branch
         # git commit -m "GHA Upstream PR"
-        git push -u --force pantheon HEAD:$PR_BRANCH_NAME
+        git push -u --force pantheon $CI_BRANCH:$PR_BRANCH_NAME
+        
 
     - name: Create multidev
       run: |
