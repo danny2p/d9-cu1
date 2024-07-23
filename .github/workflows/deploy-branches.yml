@@ -1,0 +1,89 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Pantheon Remote Branch Push
+
+# Repo Sync on Push
+on: 
+  push:
+    branches-ignore: ["master", "main"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+      id-token: write
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.PANTHEON_SSH_KEY }}
+        config: ${{ secrets.SSH_CONFIG }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+    - name: Install Terminus
+      uses: pantheon-systems/terminus-github-actions@v1
+      with:
+        pantheon-machine-token: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
+    - name: Get Committer Email and Name
+      run: |
+          COMMITTER_EMAIL=$(git log --format='%ae' -n 1 ${{ github.sha }})
+          COMMITTER_NAME=$(git log --format='%an' -n 1 ${{ github.sha }})
+
+          # Configure git defaults
+          git config --global user.email "$COMMITTER_EMAIL"
+          git config --global user.name "$COMMITTER_NAME"
+    - name: Get Canary site
+      run: |
+        CANARY_SITE=$(terminus org:site:list ${ORG_UUID} --format list --upstream ${UPSTREAM_UUID} --field name --tag canary | head -1)
+        echo "CANARY_SITE=$CANARY_SITE" >> $GITHUB_ENV
+        CANARY_REPO=$(terminus connection:info ${CANARY_SITE}.dev --fields git_url --format list)
+        echo "CANARY_REPO=$CANARY_REPO" >> $GITHUB_ENV
+      env:
+        ORG_UUID: ${{ secrets.ORG_UUID }}
+        UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
+        CI_BRANCH: ${{ github.ref_name }}
+    - name: Sync code to site
+      run: |
+        # Setup remote branch connection
+        git remote add pantheon $CANARY_REPO
+
+        # Set to git mode
+        if terminus env:info $CANARY_SITE.$CI_BRANCH > /dev/null 2>&1; then
+          terminus connection:set $CANARY_SITE.$CI_BRANCH git
+        fi
+
+        # Sync branch
+        git push -u --force pantheon HEAD:refs/heads/$CI_BRANCH
+      env:
+        CI_BRANCH: ${{ github.ref_name }}
+    - name: Create multidev if needed
+      run: |
+        if ! terminus env:info $CANARY_SITE.$CI_BRANCH > /dev/null 2>&1; then
+            terminus env:create $CANARY_SITE.dev $CI_BRANCH
+        else
+            echo "Environment $CI_BRANCH already exists."
+        fi
+        MULTIDEV_URL=$(echo "https://$CI_BRANCH-$CANARY_SITE.pantheonsite.io")
+        echo "MULTIDEV_URL=$MULTIDEV_URL" >> "$GITHUB_ENV"
+    - name: Comment on PR
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          const { MULTIDEV_URL, CI_BRANCH, CANARY_SITE } = process.env;
+          const doubleDash = (str) => str.replace(/-/g, '--');
+          const site = doubleDash(CANARY_SITE);
+          const branch = doubleDash(CI_BRANCH);
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `[![Static Badge](https://img.shields.io/badge/${site}-${branch}-%23FFDC28?logo=pantheon&logoColor=white)](${MULTIDEV_URL})`
+          });
+ 
