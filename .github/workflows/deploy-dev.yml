@@ -1,8 +1,11 @@
 name: Deploy to Dev
 on:
-  push:
-    branches:
-      - 'main'
+  workflow_dispatch:
+    inputs:
+      pantheon_tag:
+        description: 'Deploy to sites tagged:'
+        required: true
+        default: 'all'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     # Install Terminus.
     - name: Install Terminus
-      uses: pantheon-systems/terminus-github-actions@main
+      uses: pantheon-systems/terminus-github-actions@v1
       with:
         pantheon-machine-token: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
     - name: Parallel Processing
@@ -21,5 +24,11 @@ jobs:
         UPSTREAM_UUID: ${{ secrets.UPSTREAM_UUID }}
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       run: |
-        terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name
-        terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name | sort -V | parallel --jobs 100 .github/scripts/dev-deploy.sh {}
+        if  [ $INPUT_PANTHEON_TAG == all ]
+        then
+          echo "Deploying to all sites running this upstream."
+          terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID --field name | sort -V | parallel --jobs 100 .github/scripts/dev-deploy.sh {}
+        else
+          echo "Deploying to sites with tag: $INPUT_PANTHEON_TAG."
+          terminus org:site:list $ORG_UUID --format list --upstream $UPSTREAM_UUID  --tag $INPUT_PANTHEON_TAG --field name | sort -V | parallel --jobs 100 .github/scripts/dev-deploy.sh {}
+        fi
