@@ -55,14 +55,20 @@ jobs:
 
         # Fetch full history from pantheon
         git fetch --unshallow pantheon
-
+        git checkout -b $PR_BRANCH_NAME
+        
         # Check if remote branch exists
-         _check_branch=$(git ls-remote --heads pantheon $PR_BRANCH_NAME)
-         [[ -n ${_check_branch} ]] && git pull pantheon $PR_BRANCH_NAME --rebase
+        _check_branch=$(git ls-remote --heads pantheon $PR_BRANCH_NAME)
+        if [ -n ${_check_branch} ]
+        then
+          git pull pantheon $PR_BRANCH_NAME --rebase
+        else
+          git add .
+        fi
 
         # Sync branch
-        # git push -u pantheon HEAD:refs/heads/$PR_BRANCH_NAME
-        git push -u --force pantheon $PR_BRANCH_NAME
+        git commit -m "GHA Upstream PR"
+        git push -u --force pantheon HEAD:refs/heads/$PR_BRANCH_NAME
 
     - name: Create multidev
       run: |
