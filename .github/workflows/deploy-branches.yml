@@ -71,6 +71,8 @@ jobs:
         fi
         MULTIDEV_URL=$(echo "https://$CI_BRANCH-$CANARY_SITE.pantheonsite.io")
         echo "MULTIDEV_URL=$MULTIDEV_URL" >> "$GITHUB_ENV"
+      env:
+        CI_BRANCH: ${{ github.ref_name }}
     - name: Comment on PR
       uses: actions/github-script@v6
       with:
