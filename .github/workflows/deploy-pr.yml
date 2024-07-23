@@ -61,9 +61,9 @@ jobs:
         _check_branch=$(git ls-remote --heads pantheon $PR_BRANCH_NAME)
         if [ -n ${_check_branch} ]
         then
-          git pull pantheon $PR_BRANCH_NAME --rebase
-        else
           git add .
+        else
+          git pull pantheon $PR_BRANCH_NAME --rebase
         fi
 
         # Sync branch
