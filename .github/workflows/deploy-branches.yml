@@ -71,15 +71,12 @@ jobs:
         else
             echo "Environment $CI_BRANCH already exists."
         fi
-        MULTIDEV_URL=$(echo "https://$CI_BRANCH-$CANARY_SITE.pantheonsite.io")
-        echo "MULTIDEV_URL=$MULTIDEV_URL" >> "$GITHUB_ENV"
+        echo "MULTIDEV_URL=$(echo "https://$CI_BRANCH-$CANARY_SITE.pantheonsite.io")" >> $GITHUB_OUTPUT
       env:
         CI_BRANCH: ${{ github.ref_name }}
     - name: Create commit comment
       uses: peter-evans/commit-comment@v1
       with:
         body: |
-          Pantheon Multidev updated - ${MULTIDEV_URL} - ${env.MULTIDEV_URL}
-      env:
-        MULTIDEV_URL: ${{ env.MULTIDEV_URL }}
+          Pantheon Multidev updated - ${{ steps.branch-processor.outputs.MULTIDEV_URL }}
         
