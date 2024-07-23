@@ -79,5 +79,7 @@ jobs:
       uses: peter-evans/commit-comment@v1
       with:
         body: |
-          Pantheon Multidev updated - ${{ MULTIDEV_URL }}
+          Pantheon Multidev updated - ${MULTIDEV_URL} - ${env.MULTIDEV_URL}
+      env:
+        MULTIDEV_URL: ${{ env.MULTIDEV_URL }}
         
