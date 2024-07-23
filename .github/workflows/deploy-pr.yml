@@ -55,8 +55,8 @@ jobs:
 
         # Fetch full history from pantheon
         git fetch --unshallow pantheon
-        git push --force $PANTHEON_REPO $CI_BRANCH
-        
+        git push --force pantheon $PR_BRANCH_NAME
+
         # Check if remote branch exists
         # _check_branch=$(git ls-remote --heads pantheon $PR_BRANCH_NAME)
         # [[ -n ${_check_branch} ]] && git pull pantheon $PR_BRANCH_NAME --rebase
