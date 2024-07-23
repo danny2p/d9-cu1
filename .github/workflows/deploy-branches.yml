@@ -79,4 +79,5 @@ jobs:
       uses: peter-evans/commit-comment@v1
       with:
         body: |
-          Pantheon Multidev updated - https://${{ vars.MULTIDEV_URL }}.pantheonsite.io
+          Pantheon Multidev updated - ${{ MULTIDEV_URL }}
+        
