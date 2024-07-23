@@ -57,16 +57,7 @@ jobs:
         git fetch --unshallow pantheon
         #git checkout -b $PR_BRANCH_NAME
         #git add .
-
-        # Check if remote branch exists
-        _check_branch=$(git ls-remote --heads pantheon $PR_BRANCH_NAME)
-        if [ -n ${_check_branch} ]
-        then
-          #git add .
-        else
-          #git pull pantheon $PR_BRANCH_NAME --rebase
-        fi
-
+        
         # Sync branch
         # git commit -m "GHA Upstream PR"
         git push -u --force pantheon HEAD:$PR_BRANCH_NAME
