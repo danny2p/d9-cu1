@@ -74,8 +74,7 @@ jobs:
         MULTIDEV_URL=$(echo "https://$PR_BRANCH_NAME-$CANARY_SITE.pantheonsite.io")
         echo "MULTIDEV_URL=$MULTIDEV_URL" >> "$GITHUB_ENV"
 
-        echo "env multidev: ${env.MULTIDEV_URL}"
-        echo "\n multidev: ${MULTIDEV_URL}"
+        echo "\n multidev: $MULTIDEV_URL"
       env:
         CI_BRANCH: ${{ github.ref_name }}
     - name: Create commit comment
