@@ -56,6 +56,7 @@ jobs:
         fi
 
         # Fetch full history from pantheon
+        git fetch --unshallow origin
         git fetch --unshallow pantheon
         #git checkout -b $PR_BRANCH_NAME
         #git add .
