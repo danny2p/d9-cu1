@@ -61,8 +61,7 @@ jobs:
 
         # Sync branch
         # git commit -m "GHA Upstream PR"
-        git push -u --force pantheon $CI_BRANCH
-        
+        git push -u --force pantheon HEAD:$CI_BRANCH
 
     - name: Create multidev
       run: |
