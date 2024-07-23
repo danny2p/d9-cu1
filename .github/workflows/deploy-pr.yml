@@ -61,27 +61,27 @@ jobs:
 
         # Sync branch
         # git commit -m "GHA Upstream PR"
-        git push -u --force pantheon $CI_BRANCH:$PR_BRANCH_NAME
+        git push -u --force pantheon $CI_BRANCH
         
 
     - name: Create multidev
       run: |
-        if ! terminus env:info $CANARY_SITE.$PR_BRANCH_NAME > /dev/null 2>&1; then
-            terminus env:create $CANARY_SITE.dev $PR_BRANCH_NAME
+        if ! terminus env:info $CANARY_SITE.$CI_BRANCH > /dev/null 2>&1; then
+            terminus env:create $CANARY_SITE.dev $CI_BRANCH
         else
-            echo "Environment $PR_BRANCH_NAME already exists."
+            echo "Environment $CI_BRANCH already exists."
         fi
-        MULTIDEV_URL=$(echo "https://$PR_BRANCH_NAME-$CANARY_SITE.pantheonsite.io")
+        MULTIDEV_URL=$(echo "https://$CI_BRANCH-$CANARY_SITE.pantheonsite.io")
         echo "MULTIDEV_URL=$MULTIDEV_URL" >> "$GITHUB_ENV"
     - name: Comment on PR
       uses: actions/github-script@v6
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          const { MULTIDEV_URL, PR_BRANCH_NAME, CANARY_SITE } = process.env;
+          const { MULTIDEV_URL, CI_BRANCH, CANARY_SITE } = process.env;
           const doubleDash = (str) => str.replace(/-/g, '--');
           const site = doubleDash(CANARY_SITE);
-          const branch = doubleDash(PR_BRANCH_NAME);
+          const branch = doubleDash(CI_BRANCH);
           github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
