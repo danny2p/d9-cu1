@@ -1,8 +1,6 @@
-name: d9-culikems
-recipe: drupal9
+name: d9-cu-1
+recipe: pantheon
 config:
-  webroot: web
-  via: nginx
-proxy:
-  appserver_nginx:
-services:
+  framework: drupal8
+  site: d9-cu-1
+  id: c012dd7e-df3d-4717-87c8-641a36455502
